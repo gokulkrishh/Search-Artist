@@ -24,10 +24,10 @@
 	<div class="container centerDiv1" style="text-align:center;">
 	  	<ul class="nav nav-tabs" style="display:none">
 			  		<li class="active">
-			  			<a href="#tab1" class="active tab1" data-toggle="tab">Tab 1</a></li>
-			  		<li class=""><a href="#tab2" class="tab2" data-toggle="tab">Tab 2</a></li>
-			  		<li class=""><a href="#tab3" class="tab3" data-toggle="tab">Tab 3</a></li>
-			  		<li class=""><a href="#tab4" class="tab4" data-toggle="tab">Tab 4</a></li>
+			  			<a href="#tab1" class="active tab1" data-toggle="tab"></a></li>
+			  		<li class=""><a href="#tab2" class="tab2" data-toggle="tab"></a></li>
+			  		<li class=""><a href="#tab3" class="tab3" data-toggle="tab"></a></li>
+			  		<li class=""><a href="#tab4" class="tab4" data-toggle="tab"></a></li>
 		</ul>
 	<div class="tab-content">
 		<div class="modal-body tab-pane fade in active" id="tab1">
@@ -75,43 +75,121 @@
 		$("#search").click(function() {
 			var artistName = $("#name").val();
 			var artistTracks = $("#tracks").val();
-			var url = 'http://itunes.apple.com/search?term=jack&limit=4';
+			if(artistName === 'jack' && artistTracks === '4')
+			{
+				var url = 'http://itunes.apple.com/search?term=jack&limit=4';
+				$.ajax({
+				type:'GET',
+				url:url,
+				dataType: "jsonp",
+				crossDomain:true,
+				success: function(data){ 
+					success(data);
+				},
+				error:function(err) {
+					alert("error");
+				 }
+				});
+			}
+			else
+			{
+				alert("Please enter Name as jack and Track as 4");
+			}
+		});
+		function success(data) {
+			$("#myModal").modal('toggle');
+			$(".nav").show("fast");
+			var tab1 = data.results[0].artistName + " : " + data.results[0].trackName;
+			var tab2 = data.results[1].artistName + " : " + data.results[1].trackName;
+			var tab3 = data.results[2].artistName + " : " + data.results[2].trackName;
+			var tab4 = data.results[3].artistName + " : " + data.results[3].trackName;
+			$(".tab1").html(tab1.split(":")[0]);
+			$("#tab1").html("<p class='display1' style='text-align:left'>Artist Name: " + tab1.split(":")[0] + "<br>" + " Track Name: " + tab1.split(":")[1] + "</p>");
+			$(".tab2").html(tab2.split(":")[0]);
+			$("#tab2").html("<p class='display2' style='text-align:left'>Artist Name: " + tab2.split(":")[0] + "<br>" + " Track Name: " + tab2.split(":")[1] + "</p>");
+			
+			$(".tab3").html(tab3.split(":")[0]);
+			$("#tab3").html("<p class='display3' style='text-align:left'>Artist Name: " + tab3.split(":")[0] + "<br>" + " Track Name: " + tab2.split(":")[1] + "</p>");
+			
+			$(".tab4").html(tab4.split(":")[0]);
+			$("#tab4").html("<p class='display4' style='text-align:left'>Artist Name: " + tab4.split(":")[0] + "<br>" + " Track Name: " + tab4.split(":")[1] + "</p>");
+			
+			$(".tab1").click(function() {
+				var url = 'http://itunes.apple.com/search?term='+tab1.split(":")[0]+'&limit=1';	
 			$.ajax({
 				type:'GET',
 				url:url,
 				dataType: "jsonp",
 				crossDomain:true,
 				success: function(data){ 
-					$("#myModal").modal('toggle');
-					$(".nav").show("fast");
-					$('.result1').remove();
-					$("#tab1").append("<p class='result1'>Artist: "+data.results[0].artistName + "</p>");
-					$("#tab1").append("<p class='result1'>Track: "+data.results[0].trackName + "</p>");
-					$('.result2').remove();
-					$("#tab2").append("<p class='result2'>Artist: "+data.results[1].artistName + "</p>");
-					$("#tab2").append("<p class='result2'>Track: "+data.results[1].trackName + "</p>");
-					$('.result3').remove();
-					$("#tab3").append("<p class='result3'>Artist: "+data.results[2].artistName + "</p>");
-					$("#tab3").append("<p class='result3'>Track: "+data.results[2].trackName + "</p>");
-					$('.result4').remove();
-					$("#tab4").append("<p class='result4'>Artist: "+data.results[3].artistName + "</p>");
-					$("#tab4").append("<p class='result4'>Track: "+data.results[3].trackName + "</p>");
+					$(".display1").remove();
+					$(".result1").remove();
+					var tab1name = data.results[0].artistName + " : " + data.results[0].trackName +
+					" : " + data.results[0].artworkUrl30;
+					$("#tab1").append("<p class='result1' style='text-align:left'> Artist Name:"+ tab1name.split(" :")[0] +
+						"<br>"+" Track Name:"+ tab1name.split(" :")[1] + "<br>"+" Art Name Url :"+ tab1name.split(" :")[2] + "</p>");
 				},
 				error:function(err) {
 					alert("error");
 				}
 			});
 		});
-					$(".tab2").click(function() {
-						$(".result2").show();
-					});
-					$(".tab3").click(function() {
-						$(".result3").show();
-					});
-					$(".tab4").click(function() {
-						$(".result4").show();
-					});
-	});
+		$(".tab2").click(function() {
+				var url = 'http://itunes.apple.com/search?term='+tab2.split(":")[0]+'&limit=1';	
+			$.ajax({
+				type:'GET',
+				url:url,
+				dataType: "jsonp",
+				crossDomain:true,
+				success: function(data){ 
+					$(".display2").remove();
+					$(".result2").remove();
+					$("#tab2").append("<p class='result2' style='text-align:left'> Artist Name:"+ data.results[0].artistName +
+						"<br>"+" Track Name:"+ data.results[0].trackName + "<br>"+" Art Name Url :"+ data.results[0].artworkUrl30 + "</p>");
+				},
+				error:function(err) {
+					alert("error");
+				}
+			});
+		});
+		$(".tab3").click(function() {
+				var url = 'http://itunes.apple.com/search?term='+tab3.split(":")[0]+'&limit=1';	
+			$.ajax({
+				type:'GET',
+				url:url,
+				dataType: "jsonp",
+				crossDomain:true,
+				success: function(data){ 
+					$(".display3").remove();
+					$(".result3").remove();
+					$("#tab3").append("<p class='result3' style='text-align:left'> Artist Name:"+ data.results[0].artistName +
+						"<br>"+" Track Name:"+ data.results[0].trackName + "<br>"+" Art Name Url :"+ data.results[0].artworkUrl30 + "</p>");
+				},
+				error:function(err) {
+					alert("error");
+				}
+			});
+		});
+		$(".tab4").click(function() {
+				var url = 'http://itunes.apple.com/search?term='+tab4.split(":")[0]+'&limit=1';	
+			$.ajax({
+				type:'GET',
+				url:url,
+				dataType: "jsonp",
+				crossDomain:true,
+				success: function(data){ 
+					$(".display4").remove();
+					$(".result4").remove();
+					$("#tab4").append("<p class='result4' style='text-align:left'> Artist Name:"+ data.results[0].artistName +
+						"<br>"+" Track Name:"+ data.results[0].trackName + "<br>"+" Art Name Url :"+ data.results[0].artworkUrl30 + "</p>");
+				},
+				error:function(err) {
+					alert("error");
+				}
+			});
+		});
+	}
+});
 	</script>
 </body>
 </html>
